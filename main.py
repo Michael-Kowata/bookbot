@@ -1,52 +1,34 @@
+from stats import word_count, character_count, char_list
+import sys
+
 def main():
-    book_path = "books/frankenstein.txt"
+    
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+
+    book_path = sys.argv[1]
+
+    book_text = get_book_text(book_path) 
+    
+    num_chars = character_count(book_text)
+    print(char_list(num_chars))
+    
+    print("================ BOOKBOT ================\n")
+    print(f"--- Analyzing book found at {book_path}... ---\n")
+    print("-----------Word Count Report-----------\n")
+    total_words = word_count(book_text)
+    print(f"Found {total_words} total words.\n")
+    print("------------Character Count------------")
+
+    character_frequency = character_count(book_text)
+    char_list(character_frequency)
+    print("================ End report ================\n")
+
+def get_book_text(book_path):
     with open(book_path) as f:
-        file_contents = f.read()
-        total_words = word_count(file_contents)
-        print(f"--- Begin report of {book_path} ---")
-        print(f"The total number of words in this text is {total_words}.")
-        print("\n")
-        character_frequency = character_count(file_contents)
-        char_list(character_frequency)
-        print("--- End report ---")
-
-def word_count(text):
-    words = text.split()
-    return len(words)
-
-def sort_on(dict):
-    return dict["num"]
-
-def character_count(text):
-    char_count = {}
-    text = text.lower()
-
-    #Create frequency for every charcter in the text
-    for char in text:
-        if char not in char_count:
-            char_count[char] = 1
-        else:
-            char_count[char] += 1
-    
-    return char_count
-
-
-def char_list(input_char_count):
-    char_list = []
-
-    #Map each alphanumeric character and it's frequency to a corresponding string, and add to a list
-    for char in input_char_count:
-        if char not in char_list and char.isalpha():
-            char_dict = {"char": char, "num": input_char_count[char]}
-            char_list.append(char_dict)
-    
-    #Sort by highest frequency
-    char_list.sort(reverse=True, key=sort_on)
-
-    #Print out the frequency of alphanumeric characters in the list
-    for char in char_list:
-        print(f"The {char['char']} charcter appears {char['num']} times.")
-
+        file_contents = f.read()    
+        return file_contents
 
 if __name__ == '__main__':
     main()
